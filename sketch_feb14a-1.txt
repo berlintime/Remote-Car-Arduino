@@ -1,0 +1,99 @@
+int in1 = 2;
+int in2 = 3;
+int in3 = 4;
+int in4 = 5;
+int enA = 11;
+int enB = 10;
+int s = 255;
+void setup()
+{
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  Serial.begin(9600);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 0);
+  digitalWrite(in4, 0);
+  analogWrite(enA, 255);
+  analogWrite(enB, 255);
+}
+
+void loop()
+{
+  char control;
+  if (Serial.available()) {
+    control = Serial.read();
+  }
+  if (control == 'm' && s <= 225) {
+    s += 30;
+    analogWrite(enA, s);
+    analogWrite(enB, s);
+    Serial.print("Speed ");
+    Serial.print(map(s,0,255,0,100));
+    Serial.println("%");
+  }
+  else if (control == 'n' && s >= 30) {
+    s -= 30;
+    analogWrite(enA, s);
+    analogWrite(enB, s);
+    Serial.print("Speed ");
+    Serial.print(map(s,0,255,0,100));
+    Serial.println("%");
+  }
+  else if (control == 'm' && s > 225) {
+    s = 255;
+    analogWrite(enA, s);
+    analogWrite(enB, s);
+    Serial.print("Speed ");
+    Serial.print(map(s,0,255,0,100));
+    Serial.println("%");
+  }
+  else if (control == 'n' && s < 30) {
+    s = 0;
+    analogWrite(enA, s);
+    analogWrite(enB, s);
+    Serial.print("Speed ");
+    Serial.print(map(s,0,255,0,100));
+    Serial.println("%");
+  }
+  if (control == 'w') {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    Serial.println("Forward");
+  }
+  else if (control == 's') {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    Serial.println("Backward");
+  }
+  else if (control == 'a') {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    Serial.println("Turn Left");
+  }
+  else if (control == 'd') {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+    Serial.println("Turn Right");
+  }
+  else if (control == 'z') {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+    Serial.println("Stop");
+  }
+  delay(300);
+}
